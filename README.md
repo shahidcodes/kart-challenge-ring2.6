@@ -2,6 +2,8 @@
 
 Go implementation of the food ordering API based on the [OpenAPI 3.1 specification](https://orderfoodonline.deno.dev/public/openapi.yaml).
 
+> **Challenge origin**: [oolio-group/kart-challenge](https://github.com/oolio-group/kart-challenge/blob/advanced-challenge/backend-challenge/README.md)
+
 ## Endpoints
 
 | Method | Path | Auth | Description |
