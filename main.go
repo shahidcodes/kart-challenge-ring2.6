@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +16,15 @@ import (
 
 func main() {
 	port := envOrDefault("PORT", "8080")
+
+	// Stream all 3 coupon files at startup and build the valid set dynamically.
+	// Complexity: O(|file2|_8char + |file3|_8char + |file1|_8char) — only 8-char
+	// codes can overlap between files, so we extract and test a tiny subset.
+	// Falls back to hardcoded set if files are absent.
+	if err := coupon.Load("./"); err != nil {
+		log.Printf("Warning: could not load coupon files: %v", err)
+		log.Println("Falling back to embedded valid codes.")
+	}
 
 	mux := http.NewServeMux()
 
@@ -52,7 +60,8 @@ func main() {
 		}
 	}()
 
-log.Printf("Server starting on port %s...", port)
+	log.Printf("Server starting on port %s...", port)
+	log.Printf("Valid coupon codes loaded: %d", coupon.Count())
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatalf("Server error: %v", err)
 	}
@@ -64,14 +73,4 @@ func envOrDefault(key, fallback string) string {
 		return v
 	}
 	return fallback
-}
-
-// Print coupon info at startup for verification
-func init() {
-	fmt.Println("=== Order Food API Server ===")
-	fmt.Println("Valid coupon codes (appear in ≥2 coupon files):")
-	for _, c := range []string{"HAPPYHRS", "BUYGETON", "FIFTYOFF", "SIXTYOFF", "BIRTHDAY", "GNULINUX", "OVER9000", "FREEZAAA"} {
-		info := coupon.Info(c)
-		fmt.Printf("  %s → %v\n", c, info)
-	}
 }
