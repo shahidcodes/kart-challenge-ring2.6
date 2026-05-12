@@ -1,0 +1,33 @@
+# Go
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Binaries
+/bin
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+
+# Large data files (coupon databases — downloaded for analysis only)
+*.gz
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
